@@ -44,7 +44,7 @@ app.get('/todos/:id', (req, res) => {
             res.status(404).send({text: 'No user with that ID.'});
             return console.log('No user with that ID.');
         }
-        res.send(user);
+        res.send({user});
         console.log((`User by ID: ${JSON.stringify(user, null, 4)}`));
     }).catch((e) => console.log(`[!] Exception: ${e}`));
 }, (e) => {
