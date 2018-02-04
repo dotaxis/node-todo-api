@@ -21,6 +21,14 @@ app.post('/todos', (req, res) => {
     });
 });
 
+app.get('/todos', (req, res) => {
+    Todo.find().then((todos) => {
+        res.send({todos});
+    }, (e) => {
+        res.stats(400).send(e);
+    });
+});
+
 // GET /todos/123fbxjafkfb
 
 app.listen(3000, () => {
