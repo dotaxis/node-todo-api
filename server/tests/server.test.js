@@ -1,13 +1,17 @@
 const expect = require('expect');
 const request = require('supertest');
+const {ObjectID} = require('mongodb')
+
 
 const {app} = require('./../server');
 const {Todo} = require('./../models/todo');
 const {User} = require('./../models/user');
 
 const dummyDB = [{
+    _id: new ObjectID(),
     text: 'First test to do'
 }, {
+    _id: new ObjectID(),
     text: 'Second test'
 }];
 
@@ -28,6 +32,32 @@ describe('GET /todos', () => {
         end(done());
     });
 });
+
+describe('GET /todos/:id', () => {
+    it('Should return Todo by ID', (done) => {
+        request(app)
+        .get(`/todos/${dummyDB[0]._id.toHexString()}`)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.todo.text).toBe(dummyDB[0].text);
+        })
+        .end(done);
+    });
+
+    it('Should return 404 if Todo not found', (done) => {
+        request(app)
+        .get(`/todos/${new ObjectID().toHexString()}`)
+        .expect(404)
+        .end(done);
+    });
+
+    it('Should return 404 for invalid ID', (done) => {
+        request(app)
+        .get('/todos/SOME_INVALID_ID')
+        .expect(404)
+        .end(done);
+    });
+})
 
 describe('POST /todos', () => {
     it('Should add new Todo to DB', (done) => {

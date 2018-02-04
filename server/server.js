@@ -34,21 +34,13 @@ app.get('/todos', (req, res) => {
 app.get('/todos/:id', (req, res) => {
     var id = req.params.id;
 
-    if (!ObjectID.isValid(id)) {
-        res.status(404).send({text: 'Not a valid ID.'});
-        return console.log('Invalid ID.');
-    }
+    if (!ObjectID.isValid(id)) return res.status(404).send({text: 'Not a valid ID.'});
 
-    User.findById(id).then((user) => {
-        if (!user) {
-            res.status(404).send({text: 'No user with that ID.'});
-            return console.log('No user with that ID.');
-        }
-        res.send({user});
-        console.log((`User by ID: ${JSON.stringify(user, null, 4)}`));
+    Todo.findById(id).then((todo) => {
+        if (!todo) return res.status(404).send({text: 'No todo with that ID.'});
+        res.send({todo});
     }).catch((e) => console.log(`[!] Exception: ${e}`));
 }, (e) => {
-    console.log(`[!] Exception: ${e}`);
     res.status(400).send();
 });
 
